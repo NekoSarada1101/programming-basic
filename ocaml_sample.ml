@@ -131,7 +131,22 @@ let rec length lst = match lst with
   | first :: rest -> 1 + length rest ;;
 length [2; 7; 5; 9;] ;;
 let rec even lst = match lst with
-  [] -> []
+    [] -> []
   | first :: rest -> if first mod 2 = 0 then first :: even rest else even rest ;;
 even [2; 1; 6; 4; 7] ;;
-(* p85 *)
+
+let lst = [
+  {name = "yoshida"; tensuu = 80; seiseki = "A"};
+  {name = "asai"; tensuu = 70; seiseki = "B"};
+  {name = "kaneko"; tensuu = 85; seiseki = "A"};
+]
+let rec count_A lst = match lst with
+    [] -> 0
+  | ({name = n; tensuu = t; seiseki = s;}) :: rest ->
+    if s = "A" then 1 + count_A rest else count_A rest ;;
+count_A lst ;;
+(* (パターン as パターン変数) で左のパターン全体を右のパターン変数で参照できるようになる *)
+let rec test lst = match lst with
+    [] -> []
+  | ({name = n; tensuu = t; seiseki = s;} as first) :: rest -> first :: test rest
+(* p90 *)
