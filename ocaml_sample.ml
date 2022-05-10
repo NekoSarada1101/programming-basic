@@ -149,4 +149,29 @@ count_A lst ;;
 let rec test lst = match lst with
     [] -> []
   | ({name = n; tensuu = t; seiseki = s;} as first) :: rest -> first :: test rest
-(* p90 *)
+
+(* 関数のネスト *)
+let rec add_to_each n lst = match lst with
+    [] -> []
+  | first :: rest -> (n :: first) :: add_to_each n rest ;;
+let rec prefix lst = match lst with
+    [] -> []
+  | first :: rest -> [first] :: add_to_each first (prefix rest) ;;
+prefix [1; 2; 3; 4;] ;;
+
+(* 昇順となる位置にnを挿入する *)
+let rec insert n lst = match lst with
+    [] -> [n]
+  | first :: rest -> if first < n then first :: insert n rest else n :: lst ;;
+insert 5 [1; 3; 6; 8;] ;;
+
+(* 昇順に整列したリストを返す *)
+let rec ins_sort lst = match lst with
+  [] -> []
+  | first :: rest -> insert first (ins_sort rest) ;;
+ins_sort [3; 1;] ;;
+ins_sort [5; 3; 8; 1; 7; 4;] ;;
+
+max_int ;;
+min_int ;;
+(* p96 *)
