@@ -184,7 +184,7 @@ let global_station_info_list = [
   {kanji="和光市"; kana="わこうし"; roma="wakousi"; route_name="有楽町線"};
 ]
 
-let global_ekikan_list = [
+let global_between_stations_info_list = [
   {start_station_name="代々木上原"; end_station_name="代々木公園"; go_through_route_name="千代田線"; distance=1.0; duration=2};
   {start_station_name="代々木公園"; end_station_name="明治神宮前"; go_through_route_name="千代田線"; distance=1.2; duration=2};
   {start_station_name="明治神宮前"; end_station_name="表参道"; go_through_route_name="千代田線"; distance=0.9; duration=2};
@@ -346,3 +346,26 @@ let global_ekikan_list = [
   {start_station_name="営団赤塚"; end_station_name="営団成増"; go_through_route_name="有楽町線"; distance=1.5; duration=2};
   {start_station_name="営団成増"; end_station_name="和光市"; go_through_route_name="有楽町線"; distance=2.1; duration=3};
 ]
+
+let rec roma_to_kanji r lst = match lst with
+    [] -> ""
+  | {kanji = kanji; kana = kana; roma = roma; route_name = route_name;} :: rest ->
+    if r = roma then kanji else roma_to_kanji r rest ;;
+roma_to_kanji "myogadani" global_station_info_list ;;
+
+let rec get_between_station_distance start_station end_station lst = match lst with
+    [] -> infinity
+  | {start_station_name = lst_start_station; end_station_name = lst_end_station; go_through_route_name = go_through_route_name; distance = distance; duration = duration;} :: rest ->
+    if start_station = lst_start_station && end_station = lst_end_station then distance else
+    if start_station = lst_end_station && end_station = lst_start_station then distance else
+      get_between_station_distance start_station end_station rest ;;
+get_between_station_distance "茗荷谷" "新大塚" global_between_stations_info_list ;;
+
+let display_distance start_roma end_roma =
+  let start_kanji = roma_to_kanji start_roma global_station_info_list in
+  let end_kanji = roma_to_kanji end_roma global_station_info_list in
+  let distance = get_between_station_distance start_kanji end_kanji global_between_stations_info_list in
+  if distance = infinity then start_kanji ^ "駅と" ^ end_kanji ^ "駅はつながっていません"
+  else start_kanji ^ "駅から" ^ end_kanji ^ "B駅までは" ^ string_of_float distance ^ "kmです" ;;
+display_distance "myogadani" "shinotsuka" ;;
+display_distance "myogadani" "honkomagome" ;;

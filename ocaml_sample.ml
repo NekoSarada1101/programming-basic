@@ -167,11 +167,33 @@ insert 5 [1; 3; 6; 8;] ;;
 
 (* 昇順に整列したリストを返す *)
 let rec ins_sort lst = match lst with
-  [] -> []
+    [] -> []
   | first :: rest -> insert first (ins_sort rest) ;;
 ins_sort [3; 1;] ;;
 ins_sort [5; 3; 8; 1; 7; 4;] ;;
 
 max_int ;;
 min_int ;;
-(* p96 *)
+
+(* 局所変数定義 *)
+(* 変数のスコープはinに続く式のみ *)
+let x = 2 in x + x ;;
+let x = 3 in let y = 4 in x + y ;;
+let rec minimum lst = match lst with
+    [] -> max_int
+  | first :: rest -> let min_rest = minimum rest in if first <= min_rest then first else min_rest ;;
+minimum [2; 7; 1; 8; 4;] ;;
+
+(* パターンマッチ付き局所変数定義 *)
+let rec shukei lst = match lst with
+    [] -> (0, 0, 0, 0)
+  | {name = n; tensuu = t; seiseki = s;} :: rest ->
+    let (a, b, c, d) = shukei rest in
+      if s = "A" then (a + 1, b, c, d)
+      else if s = "B" then (a, b + 1, c, d)
+      else if s = "C" then (a, b, c + 1, d)
+      else (a, b, c, d + 1) ;;
+
+(* リスト結合 *)
+[1; 2; 3;] @ [4; 5; 6;] ;;
+(* p106 *)
